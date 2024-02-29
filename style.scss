@@ -1,0 +1,10 @@
+@use 'kanagawa';
+
+body {
+    background-color: kanagawa.$sumiInk0;
+}
+
+.tty {
+    background-color: kanagawa.$sumiInk1;
+    color: kanagawa.$fujiWhite;
+}
