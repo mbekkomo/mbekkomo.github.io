@@ -1,21 +1,30 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  getPackageBin = x: ":${x}/bin";
+in
+{
   packages = with pkgs; [
-    emmet-language-server
-    vscode-langservers-extracted
-    tailwindcss
-    tailwindcss-language-server
-    superhtml
-    nodePackages.nodejs
-    pnpm
+    luajitPackages.lua
+    luajitPackages.luarocks
   ];
 
   processes = {
-    tailwindcss.exec = ''
-      PATH+=:${pkgs.tailwindcss}/bin
-      tailwindcss --input input.css --output output.css --watch
-    '';
     serve.exec = ''
-      pnpx live-server --no-browser --watch=index.html,output.css
+      lapis serve
     '';
+  };
+
+  tasks = {
+    "project:install-deps" = {
+      exec = ''
+        PATH+=${getPackageBin pkgs.m4}
+        ./luarocks install --deps-only website-dev-1.rockspec \
+          CRYPTO_INCDIR=${pkgs.openssl.dev}/include \
+          CRYPTO_LIBDIR=${pkgs.openssl.out}/lib \
+          OPENSSL_INCDIR=${pkgs.openssl.dev}/include \
+          OPENSSL_LIBDIR=${pkgs.openssl.out}/lib
+      '';
+      before = [ "devenv:enterShell" ];
+    };
   };
 }

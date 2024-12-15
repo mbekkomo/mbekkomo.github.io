@@ -131,3 +131,7 @@ dist
 
 .direnv/
 .devenv/
+/luarocks
+/lua
+/lua_modules
+/.luarocks
